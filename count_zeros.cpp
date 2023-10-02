@@ -6,7 +6,7 @@
 typedef int T;
 using namespace std;
 
-int CountZeros (T x)
+int CountZeros_bad (T x)
 {
     size_t count = 0;
 
@@ -19,7 +19,7 @@ int CountZeros (T x)
     return count;
 }
 
-int cnt5 (T x) {
+int CountZeros_good (T x) {
     int t =floor(log(x) / log(2)) + 1;
     x = ( x & 0x55555555u ) + ( ( x >> 1 ) & 0x55555555u ) ;
     x = ( x & 0x33333333u ) + ( ( x >> 2 ) & 0x33333333u ) ;
@@ -33,7 +33,7 @@ int main()
     for (int i = 0; i < 100000; ++i) {
         srand((int)time(NULL));
         int a = rand() % 100001;
-        CountZeros (a);
+        CountZeros_bad (a);
     }
 
     clock_t end1 = clock();
@@ -43,7 +43,7 @@ int main()
     for (int i = 0; i < 100000; ++i) {
         srand((int)time(NULL));
         int a = rand() % 100001;
-        cnt5 (a);
+        CountZeros_good (a);
     }
 
     clock_t end2 = clock();
