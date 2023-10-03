@@ -1,9 +1,10 @@
 #include <iostream>
 #include <cmath>
-#include <ctime>
 #include <stdlib.h>
+#include <chrono>
 
 using namespace std;
+
 int normal_gcd (int a, int b)
 {
     if (b == 0)
@@ -18,49 +19,58 @@ int binary_gcd (int a, int b)
         return b;
     if (b == 0)
         return a;
+    a = abs(a);
+    b = abs(b);
 
     int az = __builtin_ctz(a);
     int bz = __builtin_ctz(b);
-    int shift = std::min(az, bz);
+    int shift = min(az, bz);
     b >>= bz;
 
     while (a != 0) {
-        a >>= az;
-        int diff = b - a;
-        az = __builtin_ctz(diff);
+        a >>= __builtin_ctz(a);
         b = min(a, b);
-        a = abs(diff);
+        a = fabs(b - a);
     }
 
     return b << shift;
 }
 
 
-int main()
+int pusk(int t)
 {
-
-    clock_t tStart1 = clock();
-    for (int i = 0; i < 100000; ++i) {
-        srand((int)time(NULL));
-        int a = rand() % 1001 - 500;
-        int b = rand() % 1001 - 500;
+    auto tStart1 = chrono::steady_clock::now();
+    for (int i = 0; i < t; ++i) {
+        //srand((int)time(NULL));
+        int a = (rand() * 100 + rand()) % 2000000 - 1000000;
+        int b = (rand() * 100 + rand()) % 2000000 - 1000000;
         normal_gcd(a, b);
     }
 
-    clock_t end1 = clock();
-    double time_algo1 = (double)(end1 - tStart1) / CLOCKS_PER_SEC;
+    auto tEnd1 = chrono::steady_clock::now();
+    auto time_algo1 = chrono::duration_cast<chrono::milliseconds>(tEnd1 - tStart1).count();
 
-    clock_t tStart2 = clock();
-    for (int i = 0; i < 100000; ++i) {
-        srand((int)time(NULL));
-        int a = rand() % 1001;
-        int b = rand() % 1001;
+    auto tStart2 = chrono::steady_clock::now();
+    for (int i = 0; i < t; ++i) {
+        //srand((int)time(NULL));
+        int a = (rand() * 100 + rand()) % 2000000 - 1000000;
+        int b = (rand() * 100 + rand()) % 2000000 - 1000000;
         binary_gcd(a, b);
     }
 
-    clock_t end2 = clock();
-    double time_algo2 = (double)(end2 - tStart2) / CLOCKS_PER_SEC;
+    auto tEnd2 = chrono::steady_clock::now();
+    auto time_algo2 = chrono::duration_cast<chrono::milliseconds>(tEnd2 - tStart2).count();
 
-    cout << time_algo1 << ' ' << time_algo2;
+    cout << "Quantity of tests is lower than " << t << ":\n";
+    cout << "Slow algo: " << time_algo1 << "ms\n";
+    cout << "Fast algo: " << time_algo2 << "ms\n";
     return(0);
+
+}
+
+int main()
+{
+    for (int t = 1; t <= 10000000; t*=10)
+        pusk(t);
+
 }
