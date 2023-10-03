@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <chrono>
 
-
-
 using namespace std;
 
 int normal_gcd (int a, int b)
