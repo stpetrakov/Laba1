@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 using namespace std;
+
 int normal_gcd (int a, int b)
 {
     if (b == 0)
