@@ -2,8 +2,12 @@
 #include <cmath>
 #include <ctime>
 #include <stdlib.h>
+#include <chrono>
+
+
 
 using namespace std;
+
 int normal_gcd (int a, int b)
 {
     if (b == 0)
@@ -21,46 +25,53 @@ int binary_gcd (int a, int b)
 
     int az = __builtin_ctz(a);
     int bz = __builtin_ctz(b);
-    int shift = std::min(az, bz);
+    int shift = min(az, bz);
     b >>= bz;
 
     while (a != 0) {
-        a >>= az;
-        int diff = b - a;
-        az = __builtin_ctz(diff);
+        a >>= __builtin_ctz(a);
         b = min(a, b);
-        a = abs(diff);
+        a = fabs(b - a);
     }
 
     return b << shift;
 }
 
 
-int main()
+int pusk(int t)
 {
-
-    clock_t tStart1 = clock();
-    for (int i = 0; i < 100000; ++i) {
-        srand((int)time(NULL));
-        int a = rand() % 1001 - 500;
-        int b = rand() % 1001 - 500;
+    auto tStart1 = clock();
+    for (int i = 0; i < t; ++i) {
+        //srand((int)time(NULL));
+        int a = (rand() * 100 + rand()) % 1000000;
+        int b = (rand() * 100 + rand()) % 1000000;
         normal_gcd(a, b);
     }
 
     clock_t end1 = clock();
-    double time_algo1 = (double)(end1 - tStart1) / CLOCKS_PER_SEC;
+    double time_algo1 = (double)(end1 - tStart1);
 
     clock_t tStart2 = clock();
-    for (int i = 0; i < 100000; ++i) {
-        srand((int)time(NULL));
-        int a = rand() % 1001;
-        int b = rand() % 1001;
+    for (int i = 0; i < t; ++i) {
+        //srand((int)time(NULL));
+        int a = (rand() * 100 + rand()) % 1000000;
+        int b = (rand() * 100 + rand()) % 1000000;
         binary_gcd(a, b);
     }
 
     clock_t end2 = clock();
-    double time_algo2 = (double)(end2 - tStart2) / CLOCKS_PER_SEC;
+    double time_algo2 = (double)(end2 - tStart2);
 
-    cout << time_algo1 << ' ' << time_algo2;
+    cout << "For numbers lower than " << t << ":\n";
+    cout << "Slow algo: " << time_algo1 << '\n';
+    cout << "Fast algo: " << time_algo2 << '\n';
     return(0);
+
+}
+
+int main()
+{
+    for (int t = 1; t <= 10000000; t*=10)
+        pusk(t);
+
 }
